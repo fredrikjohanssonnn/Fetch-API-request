@@ -1,14 +1,16 @@
 const gallery = document.getElementById('gallery');
 
+/* Reusable function that takes an element and a className as parameters. Just to make it easier to read*/
+
 const createElement = (element, className) => {
   const el = document.createElement(element);
   const result = el.add.classList(className);
   return result;
 };
 
-const fetchData = (url) => {
-  return fetch(url).then((res) => res.json());
-};
+/* Reusable function that fetches the URL that is passed as a parameter and converts it to json format*/
+
+const fetchData = (url) => fetch(url).then((res) => res.json());
 
 const displayUsers = () => {
   const card = createElement('div', 'card');
@@ -16,4 +18,13 @@ const displayUsers = () => {
   const img = createElement('img', 'card-img');
 };
 
-fetchData('https://randomuser.me/api/').then((data) => console.log(data));
+fetchData('https://randomuser.me/api/?format=SQL&results=12').then((data) => {
+  const users = data.results.map((user) => {
+    const { first, last } = user.name;
+    const city = user.location.city;
+    const email = user.email;
+    const thumbnail = user.picture.thumbnail;
+  });
+
+  return users;
+});
