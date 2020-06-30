@@ -5,13 +5,16 @@ const gallery = document.getElementById('gallery');
 const fetchData = (url) => fetch(url).then((res) => res.json());
 
 fetchData('https://randomuser.me/api/?format=SQL&results=12').then((data) => {
-  const users = data.results.map((user) => {
-    const { first: firstname, last: lastname } = user.name;
-    const { city, state } = user.location;
-    const email = user.email;
-    const thumbnail = user.picture.thumbnail;
+  const users = data.results
+    .map((user) => {
+      /* Destructuring objects for readability */
 
-    gallery.innerHTML = `
+      const { first: firstname, last: lastname } = user.name;
+      const { city, state } = user.location;
+      const email = user.email;
+      const thumbnail = user.picture.thumbnail;
+
+      return `
         <div class="card">
             <div class="card-img-container">
                 <img class="card-img" src="${thumbnail}" alt="profile picture">
@@ -23,7 +26,8 @@ fetchData('https://randomuser.me/api/?format=SQL&results=12').then((data) => {
             </div>
         </div>
     `;
-  });
+    })
+    .join('');
 
-  return users;
+  gallery.innerHTML = users;
 });
