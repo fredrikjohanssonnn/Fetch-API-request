@@ -1,5 +1,4 @@
 const gallery = document.getElementById('gallery');
-const card = document.querySelectorAll('.card');
 let users = null;
 /* Reusable function that fetches the URL that is passed as a parameter and converts it to json format*/
 
@@ -39,9 +38,7 @@ const displayUsers = () => {
   gallery.innerHTML = userIndex;
 };
 
-const showModal = () => {
-  console.log(card);
-};
+const showModal = () => {};
 
 gallery.addEventListener('click', (e) => {
   if (e.target !== gallery) {
