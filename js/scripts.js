@@ -43,23 +43,41 @@ const showModal = () => {};
 gallery.addEventListener('click', (e) => {
   if (e.target !== gallery) {
     const dataId = e.target.dataset.id;
-    console.log(users[dataId].name['first']);
+    const user = users[dataId];
+
     const highlightedUser = `
     <div class="modal-container">
               <div class="modal">
                   <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                   <div class="modal-info-container">
-                      <img class="modal-img" src="https://placehold.it/125x125" alt="profile picture">
-                      <h3 id="name" class="modal-name cap">${users[dataId].name['first']}</h3>
-                      <p class="modal-text">email</p>
-                      <p class="modal-text cap">city</p>
+                      <img class="modal-img" src="${
+                        user.picture.medium
+                      }" alt="profile picture">
+                      <h3 id="name" class="modal-name cap">${
+                        user.name['first'] + ' ' + user.name['last']
+                      }</h3>
+                      <p class="modal-text">${user.email}</p>
+                      <p class="modal-text cap">${user.location.city}</p>
                       <hr>
-                      <p class="modal-text">(555) 555-5555</p>
-                      <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
-                      <p class="modal-text">Birthday: 10/21/2015</p>
+                      <p class="modal-text">${user.phone}</p>
+                      <p class="modal-text">${
+                        user.location.street.name +
+                        ' ' +
+                        user.location.street.number +
+                        ', ' +
+                        user.location.postcode +
+                        ' ' +
+                        user.location.country
+                      }</p>
+                      <p class="modal-text">Birthday: ${user.dob.date}</p>
                   </div>
               </div>
     `;
     gallery.insertAdjacentHTML('afterend', highlightedUser);
+
+    document.getElementById('modal-close-btn').addEventListener('click', () => {
+      const modal = document.querySelector('.modal-container');
+      document.body.removeChild(modal);
+    });
   }
 });
