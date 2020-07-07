@@ -38,14 +38,8 @@ const displayUsers = () => {
   gallery.innerHTML = userIndex;
 };
 
-const showModal = () => {};
-
-gallery.addEventListener('click', (e) => {
-  if (e.target !== gallery) {
-    const dataId = e.target.dataset.id;
-    const user = users[dataId];
-
-    const highlightedUser = `
+const showModal = (user) => {
+  const highlightedUser = `
     <div class="modal-container">
               <div class="modal">
                   <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -72,8 +66,30 @@ gallery.addEventListener('click', (e) => {
                       <p class="modal-text">Birthday: ${user.dob.date}</p>
                   </div>
               </div>
+              <div class="modal-btn-container">
+                <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+                <button type="button" id="modal-next" class="modal-next btn">Next</button>
+              </div>
+      </div>
     `;
-    gallery.insertAdjacentHTML('afterend', highlightedUser);
+  gallery.insertAdjacentHTML('afterend', highlightedUser);
+};
+
+gallery.addEventListener('click', (e) => {
+  if (e.target !== gallery) {
+    let dataId = e.target.dataset.id;
+    let user = users[dataId];
+    showModal(user);
+
+    document.getElementById('modal-next').addEventListener('click', () => {
+      const modal = document.querySelectorAll('.modal-container');
+      for (let i = modal.length - 1; i >= 0; --i) {
+        modal[i].remove();
+      }
+      let nextUser = dataId++;
+      user = users[nextUser];
+      showModal(user);
+    });
 
     document.getElementById('modal-close-btn').addEventListener('click', () => {
       const modal = document.querySelector('.modal-container');
