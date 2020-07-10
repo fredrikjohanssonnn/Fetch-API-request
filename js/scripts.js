@@ -30,12 +30,28 @@ const displayUsers = () => {
               <p class="card-text">${email}</p>
               <p class="card-text cap">${city}, ${state}</p>
           </div>
+          
       </div>
   `;
     })
     .join('');
 
   gallery.innerHTML = userIndex;
+
+  for (let i = 0; i < document.querySelectorAll('.card').length; i++) {
+    document.querySelectorAll('.card')[i].addEventListener('click', (e) => {
+      let dataId = parseInt(e.currentTarget.dataset.id);
+      let user = users[dataId];
+      showModal(user);
+
+      document
+        .getElementById('modal-close-btn')
+        .addEventListener('click', () => {
+          const modal = document.querySelector('.modal-container');
+          document.body.removeChild(modal);
+        });
+    });
+  }
 };
 
 const showModal = (user) => {
@@ -66,34 +82,7 @@ const showModal = (user) => {
                       <p class="modal-text">Birthday: ${user.dob.date}</p>
                   </div>
               </div>
-              <div class="modal-btn-container">
-                <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-                <button type="button" id="modal-next" class="modal-next btn">Next</button>
-              </div>
       </div>
     `;
   gallery.insertAdjacentHTML('afterend', highlightedUser);
 };
-
-gallery.addEventListener('click', (e) => {
-  if (e.target !== gallery) {
-    let dataId = e.target.dataset.id;
-    let user = users[dataId];
-    showModal(user);
-
-    document.getElementById('modal-next').addEventListener('click', () => {
-      const modal = document.querySelectorAll('.modal-container');
-      for (let i = modal.length - 1; i >= 0; --i) {
-        modal[i].remove();
-      }
-      let nextUser = dataId++;
-      user = users[nextUser];
-      showModal(user);
-    });
-
-    document.getElementById('modal-close-btn').addEventListener('click', () => {
-      const modal = document.querySelector('.modal-container');
-      document.body.removeChild(modal);
-    });
-  }
-});
