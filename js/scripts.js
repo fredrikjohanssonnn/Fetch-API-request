@@ -6,16 +6,23 @@ const fetchData = async (url) =>
     res.json()
   ); /* Reusable function that fetches the URL that is passed as a parameter and converts it to json format*/
 
-fetchData('https://randomuser.me/api/?nat=us,gb&?format=SQL&results=12')
+fetchData(
+  'https://randomuser.me/api/?nat=us,gb&?format=SQL&results=12'
+) /* Fetch the data with nationalities, 12 results and
+call the functions and passing the parameter users which contains the array of objects (the result)*/
   .then((data) => {
     users = data.results;
     filterUsers(users);
     displayUsers(users);
     return users;
   })
-  .catch((err) => console.error(err));
+  .catch((err) =>
+    console.error(err)
+  ); /* Log an error to the console in case somethings wrong (e.g. the URL is broken)*/
 
 const displayUsers = (users) => {
+  /* Map through the array. Destructure some properties for readability. Return the elements with a template literal
+  and set the innerHTML of the gallery div with this content*/
   const userIndex = users
     .map((user, index) => {
       const { first: firstname, last: lastname } = user.name;
@@ -41,12 +48,14 @@ const displayUsers = (users) => {
   gallery.innerHTML = userIndex;
 
   for (let i = 0; i < document.querySelectorAll('.card').length; i++) {
+    /* Loop through all the card elements. When a user clicks each card, it will pass the index number that was set to each user (data-id).
+    then pass that one to the showModal function so it displays the correct user. */
     document.querySelectorAll('.card')[i].addEventListener('click', (e) => {
       let dataId = parseInt(e.currentTarget.dataset.id);
       let user = users[dataId];
       showModal(user);
 
-      document
+      document /* Remove the current modal */
         .getElementById('modal-close-btn')
         .addEventListener('click', () => {
           const modal = document.querySelector('.modal-container');
@@ -57,6 +66,7 @@ const displayUsers = (users) => {
 };
 
 const showModal = (user) => {
+  /* Using template literal to show the content of the user that was called in the displayUsers function */
   const highlightedUser = `
     <div class="modal-container">
               <div class="modal">
@@ -90,6 +100,7 @@ const showModal = (user) => {
 };
 
 const filterUsers = (users) => {
+  /* Add the form element to the page. It'll then add an eventlistener to the input element. */
   const searchField = `
   <div class="search-container">
   <form id="form" action="#" method="get">
@@ -109,6 +120,7 @@ const filterUsers = (users) => {
   document.forms['form']
     .querySelector('input')
     .addEventListener('keyup', (e) => {
+      /* When the user press a button. It'll then compare the input against the names in the users array, and filter away the elements that doesn't include the user input */
       e.preventDefault();
       const term = e.target.value.toLowerCase();
       const filteredNames = users.filter((user) => {
@@ -117,6 +129,8 @@ const filterUsers = (users) => {
           user.name.last.toLowerCase().includes(term)
         );
       });
-      displayUsers(filteredNames);
+      displayUsers(
+        filteredNames
+      ); /* Update the displayUsers with the new parameter which contains the new array that was passed through the filter function */
     });
 };
