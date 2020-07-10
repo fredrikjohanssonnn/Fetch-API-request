@@ -1,18 +1,21 @@
 const gallery = document.getElementById('gallery');
 let users = null;
-/* Reusable function that fetches the URL that is passed as a parameter and converts it to json format*/
 
-const fetchData = async (url) => await fetch(url).then((res) => res.json());
+const fetchData = async (url) =>
+  await fetch(url).then((res) =>
+    res.json()
+  ); /* Reusable function that fetches the URL that is passed as a parameter and converts it to json format*/
 
-fetchData('https://randomuser.me/api/?format=SQL&results=12')
+fetchData('https://randomuser.me/api/?nat=us,gb&?format=SQL&results=12')
   .then((data) => {
     users = data.results;
-    displayUsers();
+    filterUsers(users);
+    displayUsers(users);
     return users;
   })
   .catch((err) => console.error(err));
 
-const displayUsers = () => {
+const displayUsers = (users) => {
   const userIndex = users
     .map((user, index) => {
       const { first: firstname, last: lastname } = user.name;
@@ -30,7 +33,6 @@ const displayUsers = () => {
               <p class="card-text">${email}</p>
               <p class="card-text cap">${city}, ${state}</p>
           </div>
-          
       </div>
   `;
     })
@@ -85,4 +87,36 @@ const showModal = (user) => {
       </div>
     `;
   gallery.insertAdjacentHTML('afterend', highlightedUser);
+};
+
+const filterUsers = (users) => {
+  const searchField = `
+  <div class="search-container">
+  <form id="form" action="#" method="get">
+    <input
+      type="search"
+      id="search-input"
+      class="search-input"
+      placeholder="Search..."
+    />
+  </form>
+</div>
+  `;
+  document
+    .querySelector('.header-text-container')
+    .insertAdjacentHTML('afterend', searchField);
+
+  document.forms['form']
+    .querySelector('input')
+    .addEventListener('keyup', (e) => {
+      e.preventDefault();
+      const term = e.target.value.toLowerCase();
+      const filteredNames = users.filter((user) => {
+        return (
+          user.name.first.toLowerCase().includes(term) ||
+          user.name.last.toLowerCase().includes(term)
+        );
+      });
+      displayUsers(filteredNames);
+    });
 };
