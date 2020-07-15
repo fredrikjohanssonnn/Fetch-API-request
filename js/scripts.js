@@ -91,7 +91,9 @@ const showModal = (user) => {
                         ' ' +
                         user.location.country
                       }</p>
-                      <p class="modal-text">Birthday: ${user.dob.date}</p>
+                      <p class="modal-text">Birthday: ${new Date(
+                        user.dob.date
+                      ).toLocaleDateString()}</p>
                   </div>
               </div>
       </div>
